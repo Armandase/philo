@@ -37,14 +37,14 @@ void	manager(t_philo *philo, t_param *pars)
 	count = 0;
 	while (i < pars->nb_philo)
 	{
-		pthread_mutex_lock(&philo->lock);
-		if (pars->eat && philo->alive == pars->need_eat)
+		pthread_mutex_lock(&philo[i].lock);
+		if (pars->eat && philo[i].alive >= philo[i].pars->need_eat)
 			count++;
-		pthread_mutex_unlock(&philo->lock);
 		if (count >= pars->nb_philo)
-			return ;
-		if (time_to_die(philo))
-			return ;
+			break ;
+		if (time_to_die(&philo[i]))
+			break ;
+		pthread_mutex_unlock(&philo[i].lock);
 		i++;
 		if (i == pars->nb_philo)
 		{
@@ -52,6 +52,7 @@ void	manager(t_philo *philo, t_param *pars)
 			count = 0;
 		}
 	}
+	return ;
 }
 
 void	meal(t_philo *philo)
@@ -61,5 +62,6 @@ void	meal(t_philo *philo)
 	time = get_time();
 	printf("%s%d %d is eating%s\n", PURPLE, time - philo->pars->begin, philo->id, NC);
 	usleep(philo->pars->eat);
+	philo->alive++;
 	philo->lst_eat = time;
 }

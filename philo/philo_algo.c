@@ -19,8 +19,7 @@ int	close_thread(pthread_t *th_philo, t_param *pars)
 	i = 0;
 	while (i < pars->nb_philo)
 	{
-		if (pthread_join(th_philo[i], NULL) != 0)
-			return (1);
+		pthread_join(th_philo[i], NULL);
 		i++;
 	}
 	return (0);
@@ -60,6 +59,8 @@ void	*start_philo(void *philo_cast)
 		usleep(philo->pars->sleep);
 		time = get_time();
 		printf("%s%d %d is thinking%s\n", BLUE, time - philo->pars->begin, philo->id, NC);
+		if (philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
+			return (NULL);
 	}
 }
 
@@ -67,8 +68,8 @@ int	init_philo(t_param *pars)
 {
 	t_philo			*philo;
 	pthread_t		*th_philo;
-	int				i;
-	pthread_mutex_t	*fork;
+	int			i;
+	pthread_mutex_t		*fork;
 
 	th_philo = malloc(sizeof(pthread_t) * pars->nb_philo);
 	fork = malloc(sizeof(pthread_mutex_t) * pars->nb_philo);
@@ -84,6 +85,9 @@ int	init_philo(t_param *pars)
 	}
 	manager(philo, pars);
 	close_thread(th_philo, pars);
+	i = 0;
 	free(philo);
+	free(th_philo);
+	free(fork);
 	return (0);
 }
