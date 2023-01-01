@@ -12,6 +12,20 @@
 
 #include "philo.h"
 
+int     end_philo(t_philo *philo)
+{
+        int     i;
+        
+        i = 0;
+        while (i < philo->pars->nb_philo)
+        {
+                if (philo[i].alive == FALSE)
+                        return (1);
+                i++;
+        }
+        return (0);
+}
+
 int	close_thread(pthread_t *th_philo, t_param *pars)
 {
 	int	i;
@@ -59,7 +73,8 @@ void	*start_philo(void *philo_cast)
 		usleep(philo->pars->sleep);
 		time = get_time();
 		printf("%s%d %d is thinking%s\n", BLUE, time - philo->pars->begin, philo->id, NC);
-		if (philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
+		if ((philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
+			|| end_philo(&philo[0]) == 1)
 			return (NULL);
 	}
 }
@@ -85,7 +100,6 @@ int	init_philo(t_param *pars)
 	}
 	manager(philo, pars);
 	close_thread(th_philo, pars);
-	i = 0;
 	free(philo);
 	free(th_philo);
 	free(fork);
