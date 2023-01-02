@@ -26,6 +26,21 @@ int	time_to_die(t_philo *philo)
 	return (0);
 }
 
+void	take_stop(t_philo *philo)
+{
+	int	i;
+	int	max;
+	
+	max = philo->pars->nb_philo;
+	i = 0;
+	while (i < max)
+	{
+		philo[i].alive = FALSE;
+		printf("philo %d done\n", i);
+		i++;
+	}
+}
+
 void	manager(t_philo *philo, t_param *pars)
 {
 	int	i;
@@ -38,10 +53,17 @@ void	manager(t_philo *philo, t_param *pars)
 		pthread_mutex_lock(&philo[i].lock);
 		if (pars->need_eat && philo[i].alive >= philo[i].pars->need_eat)
 			count++;
-		if (count >= pars->nb_philo)
+		if (count >= pars->nb_philo || philo[i].alive == FALSE)
+		{
+			pthread_mutex_unlock(&philo[i].lock);
 			break ;
+		}
 		if (time_to_die(&philo[i]) == 1)
+		{
+			take_stop(&philo[0]);
+			pthread_mutex_unlock(&philo[i].lock);
 			break ;
+		}
 		pthread_mutex_unlock(&philo[i].lock);
 		if (i  + 1 >= pars->nb_philo)
 		{

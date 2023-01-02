@@ -12,20 +12,6 @@
 
 #include "philo.h"
 
-int     end_philo(t_philo *philo)
-{
-        int     i;
-        
-        i = 0;
-        while (i < philo->pars->nb_philo)
-        {
-                if (philo[i].alive == FALSE)
-                        return (1);
-                i++;
-        }
-        return (0);
-}
-
 int	close_thread(pthread_t *th_philo, t_param *pars)
 {
 	int	i;
@@ -35,6 +21,35 @@ int	close_thread(pthread_t *th_philo, t_param *pars)
 	{
 		pthread_join(th_philo[i], NULL);
 		i++;
+	}
+	return (0);
+}
+
+int	check_alive(t_philo *philo)
+{
+	int	i;
+	int	j;
+	int	max;
+
+	i = philo->id - 1;
+	j = 0;
+	max = philo->pars->nb_philo;
+	if (i == philo->pars->nb_philo && philo->alive == FALSE)
+		return (FALSE);
+	else if (i == philo->pars->nb_philo && !(philo->alive == FALSE))
+		return (0);
+	while (i + j >= 0)
+	{
+		if (philo[j].alive == FALSE)
+			return (FALSE);
+		j--;
+	}
+	j = 0;
+	while (i + j < max)
+	{
+		if (philo[j].alive == FALSE)
+			return (FALSE);
+		j++;
 	}
 	return (0);
 }
@@ -73,10 +88,17 @@ void	*start_philo(void *philo_cast)
 		usleep(philo->pars->sleep);
 		time = get_time();
 		printf("%s%d %d is thinking%s\n", BLUE, time - philo->pars->begin, philo->id, NC);
+		pthread_mutex_lock(&philo->lock);
 		if ((philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
-			|| end_philo(&philo[0]) == 1)
-			return (NULL);
+			|| check_alive(philo) == FALSE)
+		{
+			printf("end of %d\n", philo->id);
+			pthread_mutex_unlock(&philo->lock);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->lock);
 	}
+	return (NULL);
 }
 
 int	init_philo(t_param *pars)
