@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/* ************************************************************************* */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   philo_algo.c                                       :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/16 17:08:47 by adamiens          #+#    #+#             */
-/*   Updated: 2022/12/19 15:21:53 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/03 17:35:26 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,78 +25,36 @@ int	close_thread(pthread_t *th_philo, t_param *pars)
 	return (0);
 }
 
-int	check_alive(t_philo *philo)
-{
-	int	i;
-	int	j;
-	int	max;
-
-	i = philo->id - 1;
-	j = 0;
-	max = philo->pars->nb_philo;
-	if (i == philo->pars->nb_philo && philo->alive == FALSE)
-		return (FALSE);
-	else if (i == philo->pars->nb_philo && !(philo->alive == FALSE))
-		return (0);
-	while (i + j >= 0)
-	{
-		if (philo[j].alive == FALSE)
-			return (FALSE);
-		j--;
-	}
-	j = 0;
-	while (i + j < max)
-	{
-		if (philo[j].alive == FALSE)
-			return (FALSE);
-		j++;
-	}
-	return (0);
-}
-
 void	*start_philo(void *philo_cast)
 {
 	t_philo	*philo;
-	int		time;
 
 	philo = (t_philo *)philo_cast;
 	if (philo->id % 2 == 0)
 	{
-		time = get_time();
-		printf("%s%d %d is thinking%s\n", BLUE, (time - philo->pars->begin), philo->id, NC);
+		print_status("is thinking", philo);
 		usleep(5);
 	}
 	while (1)
 	{
 		pthread_mutex_lock(&philo->fork[philo->id - 1]);
-		time = get_time();
-		printf("%s%d %d has taken fork%s\n", GREEN, time - philo->pars->begin, philo->id, NC);
+		print_status("has taken fork", philo);
 		if (philo->id == philo->pars->nb_philo)
 			pthread_mutex_lock(&philo->fork[0]);
 		else
 			pthread_mutex_lock(&philo->fork[philo->id]);
-		time = get_time();
-		printf("%s%d %d has taken fork%s\n", GREEN, time - philo->pars->begin, philo->id, NC);
+		print_status("has taken fork", philo);
 		meal(philo);
 		if (philo->id == philo->pars->nb_philo)
 			pthread_mutex_unlock(&philo->fork[0]);
 		else
 			pthread_mutex_unlock(&philo->fork[philo->id]);
 		pthread_mutex_unlock(&philo->fork[philo->id - 1]);
-		time = get_time();
-		printf("%s%d %d is sleeping%s\n", BYELLOW, time - philo->pars->begin, philo->id, NC);
-		usleep(philo->pars->sleep);
-		time = get_time();
-		printf("%s%d %d is thinking%s\n", BLUE, time - philo->pars->begin, philo->id, NC);
-		pthread_mutex_lock(&philo->lock);
-		if ((philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
-			|| check_alive(philo) == FALSE)
-		{
-			printf("end of %d\n", philo->id);
-			pthread_mutex_unlock(&philo->lock);
+		print_status("is sleeping", philo);
+		usleep(philo->pars->sleep * 1000);
+		print_status("is thinking", philo);
+		if (stop_routine(philo) == 1)
 			break ;
-		}
-		pthread_mutex_unlock(&philo->lock);
 	}
 	return (NULL);
 }
@@ -105,8 +63,8 @@ int	init_philo(t_param *pars)
 {
 	t_philo			*philo;
 	pthread_t		*th_philo;
-	int			i;
-	pthread_mutex_t		*fork;
+	int				i;
+	pthread_mutex_t	*fork;
 
 	th_philo = malloc(sizeof(pthread_t) * pars->nb_philo);
 	fork = malloc(sizeof(pthread_mutex_t) * pars->nb_philo);

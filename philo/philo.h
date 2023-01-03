@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/16 10:04:08 by adamiens          #+#    #+#             */
-/*   Updated: 2022/12/19 14:57:56 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/03 17:19:14 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,17 @@
 
 # define FALSE -1
 
-# define NC "\e[0m"
-# define YELLOW "\e[33m"
-# define BYELLOW "\e[1;33m"
-# define RED "\e[31m"
-# define GREEN "\e[32m"
-# define BLUE "\e[1;34m"
-# define PURPLE "\e[0;35m"
-
 typedef struct s_param{
-	int	nb_philo;
-	int	die;
-	int	eat;
-	int	sleep;
-	int	need_eat;
-	int	begin;
+	int				nb_philo;
+	long int		die;
+	long int		eat;
+	long int		sleep;
+	int				need_eat;
+	int				begin;
+	int				end;
+	pthread_mutex_t	print;
+	pthread_mutex_t	dead;
+	pthread_mutex_t	time;
 }t_param;
 
 typedef struct s_philo{
@@ -54,5 +50,7 @@ t_philo	*init_lst_eat(t_param *pars, pthread_mutex_t *fork);
 void	meal(t_philo *philo);
 int		get_time(void);
 void	manager(t_philo *philo, t_param *pars);
+void	print_status(char *action, t_philo *philo);
+int		stop_routine(t_philo *philo);
 
 #endif

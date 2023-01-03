@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 09:52:02 by adamiens          #+#    #+#             */
-/*   Updated: 2022/12/19 13:53:41 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/03 16:14:03 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,14 @@ long long	atoi_protect(char *str)
 t_param	*parsing(int argc, char **argv)
 {
 	t_param			*parsing;
-	struct timeval	tv;
-	struct timezone	tz;
 
 	if (!(argc == 5 || argc == 6))
 		return (0);
 	parsing = malloc(sizeof(t_param));
 	parsing->nb_philo = atoi_protect(argv[1]);
-	parsing->die = atoi_protect(argv[2]) * 1000;
-	parsing->eat = atoi_protect(argv[3]) * 1000;
-	parsing->sleep = atoi_protect(argv[4]) * 1000;
+	parsing->die = atoi_protect(argv[2]);
+	parsing->eat = atoi_protect(argv[3]);
+	parsing->sleep = atoi_protect(argv[4]);
 	if (argc == 6)
 		parsing->need_eat = atoi_protect(argv[5]);
 	else
@@ -55,7 +53,10 @@ t_param	*parsing(int argc, char **argv)
 		free(parsing);
 		return (NULL);
 	}
-	gettimeofday(&tv, &tz);
-	parsing->begin = tv.tv_usec / 1000 + ((tv.tv_sec % 1000) * 1000);
+	parsing->begin = get_time();
+	pthread_mutex_init(&(parsing->dead), NULL);
+	pthread_mutex_init(&(parsing->print), NULL);
+	pthread_mutex_init(&(parsing->time), NULL);
+	parsing->end = 0;
 	return (parsing);
 }
