@@ -1,55 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/16 10:04:08 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/04 14:46:01 by adamiens         ###   ########.fr       */
+/*   Created: 2023/01/04 14:01:01 by adamiens          #+#    #+#             */
+/*   Updated: 2023/01/04 19:11:42 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
-# include <pthread.h>
+# include <semaphore.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/types.h>
 # include <unistd.h>
 # include <stdio.h>
-# include <stdlib.h> 
 # include <sys/time.h>
+# include <signal.h>
+#include <sys/wait.h>
 
 # define FALSE -1
 
 typedef struct s_param{
-	int				nb_philo;
-	long int		die;
-	long int		eat;
-	long int		sleep;
-	int				need_eat;
-	int				begin;
-	int				end;
-	pthread_mutex_t	print;
-	pthread_mutex_t	dead;
-	pthread_mutex_t	time;
+	int			nb_philo;
+	long int	die;
+	long int	eat;
+	long int	sleep;
+	int			need_eat;
+	int			begin;
+	int			end;
+	sem_t		*print;
+	sem_t		*dead;
+	sem_t		*time;
+	sem_t		*fork;
 }t_param;
 
 typedef struct s_philo{
 	int				id;
 	int				lst_eat;
 	int				alive;
-	pthread_mutex_t	*fork;
 	t_param			*pars;
 }t_philo;
 
-t_param	*parsing(int argc, char **argv);
-int		init_philo(t_param *philo);
-void	init_fork(pthread_mutex_t *fork, int len);
-t_philo	*init_lst_eat(t_param *pars, pthread_mutex_t *fork);
-void	meal(t_philo *philo);
+void	parsing(int argc, char **argv, t_param *parsing);
+t_philo	*init_lst_eat(t_param *pars);
+void	init_fork(t_param *parsing);
+int		init_philo(t_param *pars);
 int		get_time(void);
-void	manager(t_philo *philo, t_param *pars);
 void	print_status(char *action, t_philo *philo);
 int		stop_routine(t_philo *philo);
+void	meal(t_philo *philo);
+void	manager(t_philo *philo, t_param *pars);
 
 #endif

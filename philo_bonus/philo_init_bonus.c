@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_init.c                                       :+:      :+:    :+:   */
+/*   philo_init_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 17:58:32 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/04 14:45:37 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/04 16:47:50 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-t_philo	*init_lst_eat(t_param *pars, pthread_mutex_t *fork)
+t_philo	*init_lst_eat(t_param *pars)
 {
 	t_philo			*philo;
 	int				time;
@@ -27,20 +27,20 @@ t_philo	*init_lst_eat(t_param *pars, pthread_mutex_t *fork)
 		philo[i].lst_eat = time;
 		philo[i].alive = 0;
 		philo[i].pars = pars;
-		philo[i].fork = fork;
 		i++;
 	}
 	return (philo);
 }
 
-void	init_fork(pthread_mutex_t *fork, int len)
+void	init_fork(t_param *parsing)
 {
-	int	i;
-
-	i = 0;
-	while (i < len)
+	sem_unlink("/fork");
+	parsing->fork = sem_open("/fork", O_CREAT, 0644, parsing->nb_philo);
+	if (parsing->fork == SEM_FAILED)
 	{
-		pthread_mutex_init(&fork[i], NULL);
-		i++;
+		sem_close(parsing->dead);
+		sem_close(parsing->time);
+		sem_close(parsing->print);
+		exit (1);
 	}
 }
