@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 09:52:02 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/03 16:14:03 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/04 12:18:08 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,8 @@ t_param	*parsing(int argc, char **argv)
 		parsing->need_eat = atoi_protect(argv[5]);
 	else
 		parsing->need_eat = 0;
-	if (parsing->nb_philo == -1 || parsing->die == -1
-		|| parsing->eat == -1 || parsing->sleep == -1
-		|| parsing->need_eat == -1)
+	if (parsing->nb_philo == -1 || parsing->die == -1 || parsing->eat
+		== -1 || parsing->sleep == -1 || parsing->need_eat == -1)
 	{
 		free(parsing);
 		return (NULL);

@@ -22,7 +22,6 @@ fclean : clean
 re: fclean all
 
 norm:
-	norminette *.c
-	normh *.h
+	norminette *.c && norminette *.h
 
 .PHONY: all clean fclean re norm 

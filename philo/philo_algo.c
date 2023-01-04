@@ -1,12 +1,12 @@
-/* ************************************************************************* */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   philo_algo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/16 17:08:47 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/03 17:35:26 by adamiens         ###   ########.fr       */
+/*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
+/*   Updated: 2023/01/04 12:20:28 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ int	close_thread(pthread_t *th_philo, t_param *pars)
 	return (0);
 }
 
+void	fork_action(t_philo *philo)
+{
+
+}
+
 void	*start_philo(void *philo_cast)
 {
 	t_philo	*philo;
@@ -33,7 +38,7 @@ void	*start_philo(void *philo_cast)
 	if (philo->id % 2 == 0)
 	{
 		print_status("is thinking", philo);
-		usleep(5);
+		usleep(philo->pars->eat * 500);
 	}
 	while (1)
 	{

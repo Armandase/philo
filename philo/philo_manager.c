@@ -6,12 +6,11 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:25:25 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/03 18:01:36 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/04 11:28:54 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <pthread.h>
 
 int	time_to_die(t_philo *philo)
 {
@@ -19,14 +18,14 @@ int	time_to_die(t_philo *philo)
 
 	time = get_time();
 	pthread_mutex_lock(&philo->pars->time);
-	if (time - philo->lst_eat > philo->pars->die * 1000)
+	if (time - philo->lst_eat > philo->pars->die)
 	{
 		philo->alive = FALSE;
+		pthread_mutex_unlock(&philo->pars->time);
 		print_status("died", philo);
 		pthread_mutex_lock(&philo->pars->dead);
 		philo->pars->end = 1;
 		pthread_mutex_unlock(&philo->pars->dead);
-		pthread_mutex_unlock(&philo->pars->time);
 		return (1);
 	}
 	pthread_mutex_unlock(&philo->pars->time);
