@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/04 12:20:28 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/04 12:38:43 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,19 @@ int	close_thread(pthread_t *th_philo, t_param *pars)
 
 void	fork_action(t_philo *philo)
 {
-
+	pthread_mutex_lock(&philo->fork[philo->id - 1]);
+	print_status("has taken fork", philo);
+	if (philo->id == philo->pars->nb_philo)
+		pthread_mutex_lock(&philo->fork[0]);
+	else
+		pthread_mutex_lock(&philo->fork[philo->id]);
+	print_status("has taken fork", philo);
+	meal(philo);
+	if (philo->id == philo->pars->nb_philo)
+		pthread_mutex_unlock(&philo->fork[0]);
+	else
+		pthread_mutex_unlock(&philo->fork[philo->id]);
+	pthread_mutex_unlock(&philo->fork[philo->id - 1]);
 }
 
 void	*start_philo(void *philo_cast)
@@ -42,19 +54,9 @@ void	*start_philo(void *philo_cast)
 	}
 	while (1)
 	{
-		pthread_mutex_lock(&philo->fork[philo->id - 1]);
-		print_status("has taken fork", philo);
-		if (philo->id == philo->pars->nb_philo)
-			pthread_mutex_lock(&philo->fork[0]);
-		else
-			pthread_mutex_lock(&philo->fork[philo->id]);
-		print_status("has taken fork", philo);
-		meal(philo);
-		if (philo->id == philo->pars->nb_philo)
-			pthread_mutex_unlock(&philo->fork[0]);
-		else
-			pthread_mutex_unlock(&philo->fork[philo->id]);
-		pthread_mutex_unlock(&philo->fork[philo->id - 1]);
+		if (philo->pars->nb_philo <= 1)
+			return (NULL);
+		fork_action(philo);
 		print_status("is sleeping", philo);
 		usleep(philo->pars->sleep * 1000);
 		print_status("is thinking", philo);
