@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/16 11:14:44 by adamiens          #+#    #+#             */
-/*   Updated: 2022/12/17 10:30:01 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/04 13:00:04 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	main(int argc, char **argv)
 {
 	t_param	*pars;
 
+	if (!(argc == 5 || argc == 6))
+		return (0);
 	pars = parsing(argc, argv);
 	if (pars == NULL)
 		return (0);
