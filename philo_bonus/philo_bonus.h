@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 14:01:01 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/05 14:14:07 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/05 15:56:09 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ int		stop_routine(t_philo *philo);
 void	meal(t_philo *philo);
 void	*manager_routine(void *philo_to_cast);
 void	free_n_quit(t_philo *philo, int *pid);
+void	fork_action(t_philo *philo);
 
 #endif

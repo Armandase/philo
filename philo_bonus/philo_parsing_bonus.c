@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 09:52:02 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/05 11:21:47 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:13:18 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,14 @@ void	init_semaphore(t_param *parsing)
 	if (parsing->print == SEM_FAILED)
 	{
 		sem_close(parsing->dead);
+		exit (1);
+	}
+	sem_unlink("/time");
+	parsing->time = sem_open("/time", O_CREAT, 0644, 1);
+	if (parsing->time == SEM_FAILED)
+	{
+		sem_close(parsing->dead);
+		sem_close(parsing->print);
 		exit (1);
 	}
 }

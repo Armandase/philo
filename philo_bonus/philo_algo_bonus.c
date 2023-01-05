@@ -6,29 +6,16 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/05 14:54:27 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:43:18 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-#include <bits/pthreadtypes.h>
-#include <semaphore.h>
-#include <unistd.h>
-
-void	fork_action(t_philo *philo)
-{
-	sem_wait(philo->pars->fork);
-	print_status("has taken fork", philo);
-	sem_wait(philo->pars->fork);
-	print_status("has taken fork", philo);
-	meal(philo);
-	sem_post(philo->pars->fork);
-	sem_post(philo->pars->fork);
-}
 
 void	*start_philo(t_philo *philo)
 {
 	pthread_t	th_manager;
+	int			time;
 
 	pthread_create(&th_manager, NULL, &manager_routine, philo);
 	pthread_detach(th_manager);
@@ -48,11 +35,15 @@ void	*start_philo(t_philo *philo)
 		print_status("is sleeping", philo);
 		usleep(philo->pars->sleep * 1000);
 		print_status("is thinking", philo);
+		time = get_time();
+		if (time - philo->lst_eat > philo->pars->die)
+		{
+			printf("ez\n\n\n\n");
+			break ;
+		}
 		if (philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
 			break ;
 	}
-	//attend la fin du repas de celui qui mange avant de join, quand 1 meurt
-	//pthread_join(th_manager, NULL);
 	return (NULL);
 }
 
@@ -64,7 +55,7 @@ void	*wait_n_exit(void	*manager_to_cast)
 	manager = (t_manager *)manager_to_cast;
 	i = manager->philo->pars->nb_philo;
 	i--;
-	while (i > 0)
+	while (i >= 0)
 	{
 		waitpid(manager->pid[i], NULL, 0);
 		i--;

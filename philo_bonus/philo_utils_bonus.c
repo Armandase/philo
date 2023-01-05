@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 14:39:50 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/05 11:19:58 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:41:53 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,15 @@ void	print_status(char *action, t_philo *philo)
 	time = get_time();
 	printf("%d %d %s\n", time - philo->pars->begin, philo->id, action);
 	sem_post(philo->pars->print);
+}
+
+void	free_n_quit(t_philo *philo, int *pid)
+{
+	sem_close(philo->pars->print);
+	sem_close(philo->pars->dead);
+	sem_close(philo->pars->fork);
+	sem_close(philo->pars->time);
+	free(pid);
+	free(philo);
+	exit (1);
 }
