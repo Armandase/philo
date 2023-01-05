@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 14:39:50 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/04 17:04:20 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/05 11:19:58 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,7 @@ void	print_status(char *action, t_philo *philo)
 	int	time;
 
 	sem_wait(philo->pars->print);
-	sem_wait(philo->pars->dead);
-	if (philo->pars->end == 1)
-	{
-		sem_post(philo->pars->dead);
-		sem_post(philo->pars->print);
-		return ;
-	}
-	sem_post(philo->pars->dead);
 	time = get_time();
 	printf("%d %d %s\n", time - philo->pars->begin, philo->id, action);
 	sem_post(philo->pars->print);
-}
-
-int	stop_routine(t_philo *philo)
-{
-	sem_wait(philo->pars->dead);
-	if ((philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
-		|| philo->pars->end == 1)
-	{
-		sem_post(philo->pars->dead);
-		return (1);
-	}
-	sem_post(philo->pars->dead);
-	return (0);
 }

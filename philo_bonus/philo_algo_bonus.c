@@ -6,12 +6,14 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/04 19:31:10 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/05 14:54:27 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+#include <bits/pthreadtypes.h>
 #include <semaphore.h>
+#include <unistd.h>
 
 void	fork_action(t_philo *philo)
 {
@@ -26,6 +28,10 @@ void	fork_action(t_philo *philo)
 
 void	*start_philo(t_philo *philo)
 {
+	pthread_t	th_manager;
+
+	pthread_create(&th_manager, NULL, &manager_routine, philo);
+	pthread_detach(th_manager);
 	if (philo->id % 2 == 0)
 	{
 		print_status("is thinking", philo);
@@ -34,32 +40,46 @@ void	*start_philo(t_philo *philo)
 	while (1)
 	{
 		if (philo->pars->nb_philo <= 1)
+		{
+			print_status("died", philo);
 			return (NULL);
+		}
 		fork_action(philo);
 		print_status("is sleeping", philo);
 		usleep(philo->pars->sleep * 1000);
 		print_status("is thinking", philo);
-		if (stop_routine(philo) == 1 || philo->alive >= philo->pars->need_eat)
+		if (philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
 			break ;
 	}
+	//attend la fin du repas de celui qui mange avant de join, quand 1 meurt
+	//pthread_join(th_manager, NULL);
 	return (NULL);
 }
 
-void	quit_init(t_philo *philo, int *pid)
+void	*wait_n_exit(void	*manager_to_cast)
 {
-	sem_close(philo->pars->print);
-	sem_close(philo->pars->dead);
-	sem_close(philo->pars->time);
-	free(pid);
-	free(philo);
-	exit (1);
+	int			i;
+	t_manager	*manager;
+
+	manager = (t_manager *)manager_to_cast;
+	i = manager->philo->pars->nb_philo;
+	i--;
+	while (i > 0)
+	{
+		waitpid(manager->pid[i], NULL, 0);
+		i--;
+	}
+	sem_post(manager->philo->pars->dead);
+	return (NULL);
 }
 
-int	init_philo(t_param *pars)
+void	init_philo(t_param *pars)
 {
 	t_philo		*philo;
 	int			i;
 	int			*pid;
+	pthread_t	th_full_eat;
+	t_manager	manager;
 
 	init_fork(pars);
 	philo = init_lst_eat(pars);
@@ -69,26 +89,26 @@ int	init_philo(t_param *pars)
 	{
 		pid[i] = fork();
 		if (pid[i] == -1)
-			quit_init(philo, pid);
+			free_n_quit(philo, pid);
 		else if (pid[i] == 0)
 		{
 			start_philo(&philo[i]);
-			quit_init(philo, pid);
-			exit (0);
+			free_n_quit(philo, pid);
 		}
 		i++;
 	}
-	//manager(philo, pars);
-	i--;
-	while (i > 0)
+	manager.philo = philo;
+	manager.pid = pid;
+	pthread_create(&th_full_eat, NULL, &wait_n_exit, &manager);
+	pthread_detach(th_full_eat);
+	sem_wait(philo->pars->dead);
+	i = 0;
+	while (i < philo->pars->nb_philo)
 	{
-		waitpid(pid[i], NULL, 0);
-		i--;
+		kill(pid[i], SIGKILL);
+		i++;
 	}
-	sem_close(philo->pars->print);
-	sem_close(philo->pars->dead);
-	sem_close(philo->pars->time);
-	free(pid);
-	free(philo);
-	return (0);
+	sem_post(philo->pars->dead);
+	usleep(philo->pars->die + 100);
+	free_n_quit(philo, pid);
 }
