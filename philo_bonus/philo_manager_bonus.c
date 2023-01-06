@@ -46,6 +46,7 @@ void	*manager_routine(void *philo_to_cast)
 	while (1)
 	{
 		usleep(philo->pars->die);
+		//verif le temps du usleep si casse pas le timer quand 4 400 200 200
 		time = get_time();
 		sem_wait(philo->pars->time);
 		if (time - philo->lst_eat > philo->pars->die)
