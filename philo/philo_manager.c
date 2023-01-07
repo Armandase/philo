@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:25:25 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/07 09:57:45 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/07 12:01:02 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	manager(t_philo *philo, t_param *pars)
 	count = 0;
 	while (1)
 	{
+		usleep(10);
 		pthread_mutex_lock(&philo->pars->time);
 		if (pars->need_eat && philo[i].alive >= pars->need_eat)
 			count++;

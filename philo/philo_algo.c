@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/07 09:59:14 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/07 12:11:41 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ int	close_thread(pthread_t *th_philo, t_param *pars)
 void	fork_action(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork[philo->id - 1]);
-	print_status("has taken fork", philo);
+	print_status("has taken a fork", philo);
 	if (philo->id == philo->pars->nb_philo)
 		pthread_mutex_lock(&philo->fork[0]);
 	else
 		pthread_mutex_lock(&philo->fork[philo->id]);
-	print_status("has taken fork", philo);
+	print_status("has taken a fork", philo);
 	meal(philo);
 	if (philo->id == philo->pars->nb_philo)
 		pthread_mutex_unlock(&philo->fork[0]);

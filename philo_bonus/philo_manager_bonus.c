@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:25:25 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/06 18:24:13 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/07 12:11:24 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	meal(t_philo *philo)
 void	fork_action(t_philo *philo)
 {
 	sem_wait(philo->pars->fork);
-	print_status("has taken fork", philo);
+	print_status("has taken a fork", philo);
 	sem_wait(philo->pars->fork);
-	print_status("has taken fork", philo);
+	print_status("has taken a fork", philo);
 	meal(philo);
 	sem_post(philo->pars->fork);
 	sem_post(philo->pars->fork);
@@ -46,7 +46,6 @@ void	*manager_routine(void *philo_to_cast)
 	while (1)
 	{
 		usleep(philo->pars->die);
-		//verif le temps du usleep si casse pas le timer quand 4 400 200 200
 		time = get_time();
 		sem_wait(philo->pars->time);
 		if (time - philo->lst_eat > philo->pars->die)
