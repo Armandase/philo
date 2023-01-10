@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/10 15:11:04 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:58:53 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ void	fork_action(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork[philo->id - 1]);
 	print_status("has taken a fork", philo);
+	if (philo->pars->nb_philo == 1)
+	{
+		protect_sleep(philo, philo->pars->die * 2);
+		pthread_mutex_unlock(&philo->fork[philo->id - 1]);
+		time_to_die(philo);
+		return ;
+	}
 	if (philo->id == philo->pars->nb_philo)
 		pthread_mutex_lock(&philo->fork[0]);
 	else
@@ -54,11 +61,6 @@ void	*start_philo(void *philo_cast)
 	}
 	while (1)
 	{
-		if (philo->pars->nb_philo <= 1)
-		{
-			print_status("died", philo);
-			return (NULL);
-		}
 		fork_action(philo);
 		print_status("is sleeping", philo);
 		protect_sleep(philo, philo->pars->sleep);
