@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/07 12:11:41 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:11:04 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	*start_philo(void *philo_cast)
 	if (philo->id % 2 == 0)
 	{
 		print_status("is thinking", philo);
-		usleep(philo->pars->eat * 500);
+		usleep(philo->pars->eat);
 	}
 	while (1)
 	{
@@ -61,7 +61,7 @@ void	*start_philo(void *philo_cast)
 		}
 		fork_action(philo);
 		print_status("is sleeping", philo);
-		usleep(philo->pars->sleep * 1000);
+		protect_sleep(philo, philo->pars->sleep);
 		print_status("is thinking", philo);
 		if (stop_routine(philo) == 1)
 			break ;

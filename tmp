@@ -3,3 +3,4 @@ si 1 philo print take a fork and die
 bonus pas usleep du temps de mort mais 
 faire if le nb de fork est egal au nb de philo
 alors c'est bon sinon attendre
+crash si 0 philo

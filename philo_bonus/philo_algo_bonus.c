@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/06 18:25:10 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:08:32 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*start_philo(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		print_status("is thinking", philo);
-		usleep(philo->pars->eat * 500);
+		protect_sleep(philo, philo->pars->eat);
 	}
 	while (1)
 	{
@@ -32,7 +32,7 @@ void	*start_philo(t_philo *philo)
 		}
 		fork_action(philo);
 		print_status("is sleeping", philo);
-		usleep(philo->pars->sleep * 1000);
+		protect_sleep(philo, philo->pars->sleep);
 		print_status("is thinking", philo);
 		if (philo->pars->need_eat && philo->alive >= philo->pars->need_eat)
 			break ;
@@ -74,8 +74,7 @@ void	action_manage(t_philo *philo, int *pid)
 		kill(pid[i], SIGKILL);
 		i++;
 	}
-	sem_post(philo->pars->dead);
-	usleep(philo->pars->die + 100);
+	usleep(philo->pars->die * 100);
 	free_n_quit(philo, pid);
 }
 

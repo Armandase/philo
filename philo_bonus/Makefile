@@ -1,4 +1,4 @@
-NAME		=	philo
+NAME		=	philo_bonus
 SRCS		=	philo_main_bonus.c \
 				philo_algo_bonus.c \
 				philo_parsing_bonus.c \

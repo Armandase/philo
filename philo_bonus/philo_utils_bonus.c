@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 14:39:50 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/05 17:41:53 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 13:50:07 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,22 @@ void	free_n_quit(t_philo *philo, int *pid)
 	free(pid);
 	free(philo);
 	exit (1);
+}
+
+void	protect_sleep(t_philo *philo, int sleep)
+{
+	int	begin;
+	int	waited;
+	int	time;
+
+	begin = get_time();
+	waited = begin + sleep;
+	while (begin < waited)
+	{
+		usleep(1000);
+		time = get_time();
+		if (time - philo->lst_eat > philo->pars->die)
+			break ;
+		begin = get_time();
+	}
 }

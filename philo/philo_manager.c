@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:25:25 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/07 12:01:02 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:11:47 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ void	manager(t_philo *philo, t_param *pars)
 		if (pars->need_eat && philo[i].alive >= pars->need_eat)
 			count++;
 		if (count >= pars->nb_philo || philo[i].alive == FALSE)
+		{
+			pthread_mutex_unlock(&philo->pars->time);
 			break ;
+		}
 		pthread_mutex_unlock(&philo->pars->time);
 		if (time_to_die(&philo[i]) == 1 || philo->pars->nb_philo <= 1)
 			break ;
@@ -58,7 +61,6 @@ void	manager(t_philo *philo, t_param *pars)
 		else
 			i++;
 	}
-	return ;
 }
 
 void	meal(t_philo *philo)
@@ -66,7 +68,7 @@ void	meal(t_philo *philo)
 	int	time;
 
 	print_status("is eating", philo);
-	usleep(philo->pars->eat * 1000);
+	protect_sleep(philo, philo->pars->eat);
 	pthread_mutex_lock(&philo->pars->time);
 	philo->alive = philo->alive + 1;
 	time = get_time();

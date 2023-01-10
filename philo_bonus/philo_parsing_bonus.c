@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 09:52:02 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/05 17:13:18 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:06:47 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ long long	atoi_protect(char *str)
 		if (value > 2147483647)
 			return (-1);
 	}
-	if ((value == 0 && i == 0) || str[i] != '\0')
+	if ((value == 0 && i == 0) || str[i] != '\0' || value == 0)
 		return (-1);
 	return (value);
 }

@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/16 10:04:08 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/04 14:46:01 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 15:10:45 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ int		get_time(void);
 void	manager(t_philo *philo, t_param *pars);
 void	print_status(char *action, t_philo *philo);
 int		stop_routine(t_philo *philo);
+void	protect_sleep(t_philo *philo, int sleep);
+int		time_to_die(t_philo *philo);
 
 #endif
