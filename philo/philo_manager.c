@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:25:25 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/10 15:11:47 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/10 17:50:14 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@ int	time_to_die(t_philo *philo)
 	return (0);
 }
 
+void	modidfy_counter(int	*i, int *count, int nb_philo)
+{
+	if ((*i) + 1 >= nb_philo)
+	{
+		*i = 0;
+		*count = 0;
+	}
+	else
+		(*i)++;
+}
+
 void	manager(t_philo *philo, t_param *pars)
 {
 	int	i;
@@ -53,13 +64,7 @@ void	manager(t_philo *philo, t_param *pars)
 		pthread_mutex_unlock(&philo->pars->time);
 		if (time_to_die(&philo[i]) == 1 || philo->pars->nb_philo <= 1)
 			break ;
-		if (i + 1 >= pars->nb_philo)
-		{
-			i = 0;
-			count = 0;
-		}
-		else
-			i++;
+		modidfy_counter(&i, &count, pars->nb_philo);
 	}
 }
 
