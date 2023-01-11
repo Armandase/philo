@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 12:13:34 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/10 16:05:56 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/11 10:07:43 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	*start_philo(t_philo *philo)
 	}
 	while (1)
 	{
+		usleep(100);
 		fork_action(philo);
 		print_status("is sleeping", philo);
 		protect_sleep(philo, philo->pars->sleep);

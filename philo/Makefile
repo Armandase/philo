@@ -2,7 +2,7 @@ NAME		= philo
 SRCS		= philo_main.c philo_algo.c philo_parsing.c \
 			  philo_init.c philo_manager.c philo_utils.c
 CC			= clang
-CFLAGS		= -Wall -Werror -Wextra -pthread -g
+CFLAGS		= -Wall -Werror -Wextra -pthread
 OBJS		= ${SRCS:.c=.o}
 
 all: ${NAME}
@@ -21,7 +21,4 @@ fclean : clean
 
 re: fclean all
 
-norm:
-	norminette *.c && norminette *.h
-
-.PHONY: all clean fclean re norm 
+.PHONY: all clean fclean re

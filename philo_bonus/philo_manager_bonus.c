@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:25:25 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/10 15:10:23 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/11 10:05:38 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	*manager_routine(void *philo_to_cast)
 	philo = (t_philo *)philo_to_cast;
 	while (1)
 	{
-		usleep(10);
+		usleep(20);
 		time = get_time();
 		sem_wait(philo->pars->time);
 		if (time - philo->lst_eat > philo->pars->die)

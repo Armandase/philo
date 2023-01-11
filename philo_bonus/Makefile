@@ -6,7 +6,7 @@ SRCS		=	philo_main_bonus.c \
 			 	philo_utils_bonus.c \
 			 	philo_manager_bonus.c 
 CC			= clang
-CFLAGS		= -Wall -Werror -Wextra -pthread -g
+CFLAGS		= -Wall -Werror -Wextra -pthread
 OBJS		= ${SRCS:.c=.o}
 
 all: ${NAME}
@@ -25,7 +25,4 @@ fclean : clean
 
 re: fclean all
 
-norm:
-	norminette *.c && norminette *.h
-
-.PHONY: all clean fclean re norm 
+.PHONY: all clean fclean re

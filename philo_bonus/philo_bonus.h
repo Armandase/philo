@@ -6,7 +6,7 @@
 /*   By: adamiens <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 14:01:01 by adamiens          #+#    #+#             */
-/*   Updated: 2023/01/10 13:52:11 by adamiens         ###   ########.fr       */
+/*   Updated: 2023/01/11 10:00:58 by adamiens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@
 # include <semaphore.h>
 # include <stdlib.h>
 # include <fcntl.h>
-# include <sys/types.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
-# include <signal.h>
 # include <sys/wait.h>
 
 # define FALSE -1
